@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Project1
@@ -22,13 +23,13 @@ namespace Project1
 
         public string Score()
         {
-            if (_firstPlayerScore == _secondPlayerScore)
+            if (Score_Same())
             {
-                if (_firstPlayerScore > 3)
+                if (SomeoneAdv())
                 {
                     return "Deuce";
                 }
-                else if (_firstPlayerScore != 0)
+                else if (ScoreIsNotZero())
                 {
                     return $"{ScoreDic[_firstPlayerScore]} All";
                 }
@@ -36,11 +37,47 @@ namespace Project1
                 return "Love All";
             }
 
-            return _firstPlayerScore > 3 || _secondPlayerScore > 3
-                ? _firstPlayerScore > _secondPlayerScore
-                    ? $"Rainy Adv" : $"Korone Adv"
-                : $"{ScoreDic[_firstPlayerScore]} {ScoreDic[_secondPlayerScore]}";
+            if (SomeoneAdv())
+            {
+                if (SomeoneWin())
+                {
+                    return Someone()
+                        ? "Rainy Win"
+                        : "Korone Win";
+                }
+
+                return Someone()
+                    ? $"Rainy Adv"
+                    : $"Korone Adv";
             }
+
+            return $"{ScoreDic[_firstPlayerScore]} {ScoreDic[_secondPlayerScore]}";
+        }
+
+        private bool ScoreIsNotZero()
+        {
+            return _firstPlayerScore != 0;
+        }
+
+        private bool Score_Same()
+        {
+            return _firstPlayerScore == _secondPlayerScore;
+        }
+
+        private bool Someone()
+        {
+            return _firstPlayerScore > _secondPlayerScore;
+        }
+
+        private bool SomeoneWin()
+        {
+            return Math.Abs(_firstPlayerScore - _secondPlayerScore) > 1;
+        }
+
+        private bool SomeoneAdv()
+        {
+            return _firstPlayerScore > 3 || _secondPlayerScore > 3;
+        }
 
         public void SetFirstPlayerScore(int i)
         {
